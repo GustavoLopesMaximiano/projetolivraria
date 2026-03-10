@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import include, path
+from django.shortcuts import redirect
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
@@ -7,30 +8,33 @@ from drf_spectacular.views import (
 )
 from rest_framework.routers import DefaultRouter
 
-from core.views import CategoriaViewSet, EditoraViewSet, UserViewSet
-from core.views.categoria import CategoriaViewset
+from core.views import CategoriaViewSet, EditoraViewSet, UserViewSet, AutorViewSet
 
 router = DefaultRouter()
 
-router.register(r'categorias', CategoriaViewset, basename='categorias')
+router.register(r'categorias', CategoriaViewSet, basename='categorias')
 router.register(r'usuarios', UserViewSet, basename='usuarios')
-router.register(r'categorias', CategoriaViewSet)
 router.register(r'editoras', EditoraViewSet)
+router.register(r'autores', AutorViewSet)
 
 urlpatterns = [
+    path('', lambda request: redirect('/api/swagger/')),
+
     path('admin/', admin.site.urls),
-    # OpenAPI 3
+
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+
     path(
         'api/swagger/',
         SpectacularSwaggerView.as_view(url_name='schema'),
         name='swagger-ui',
     ),
+
     path(
         'api/redoc/',
         SpectacularRedocView.as_view(url_name='schema'),
         name='redoc',
     ),
-    # API
+
     path('api/', include(router.urls)),
 ]

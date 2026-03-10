@@ -1,1 +1,1 @@
-from .editora import EditoraViewSet     
+#void
